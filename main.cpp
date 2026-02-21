@@ -23,17 +23,14 @@ double GetNextRandomInterval(double avg) {
     return intervalTime;
 }
 
-int main() {
-    // Seeds the random number generator 
-    srand(time(0));
-
-    // 1. Read the input file
-    string filename = "test1.txt"; 
+// Wrapper function to run the simulation for any given text file
+void runSimulation(string filename) {
+    // 1. Reads the input file
     ifstream infile(filename);
 
     if (!infile) {
         cout << "Error opening file: " << filename << endl;
-        return 1; 
+        return; 
     }
 
     double lambda;   
@@ -44,27 +41,36 @@ int main() {
     infile >> lambda >> mu >> M >> totalEvents;
     infile.close();
 
-    // Just printing to verify we read it correctly
-    cout << "--- Simulation Parameters ---" << endl;
+    // Checks if reading correctly 
+    cout << "\n--- Simulation Parameters (" << filename << ") ---" << endl;
     cout << "Lambda (Arrival Rate) : " << lambda << endl;
     cout << "Mu (Service Rate)     : " << mu << endl;
     cout << "M (Servers)           : " << M << endl;
     cout << "Total Events          : " << totalEvents << endl;
-    cout << "-----------------------------" << endl;
+    cout << "---------------------------------------" << endl;
 
-    // --- SIMULATION ENGINE SETUP ---
+    // Simulation Engine Setup
     double currentTime = 0.0;
     int availableServers = M;
     PriorityQueue pq;
     FIFOQueue fifo;
     
-    int eventsProcessed = 0; // To keep track of our 5000 limit
+    int eventsProcessed = 0;
+    
+    // Batching Logic Setup
+    double lastArrivalTime = 0.0; 
+    int maxArrivals = totalEvents / 2; 
+    int arrivalsGenerated = 0;
 
-    // 1. Kickstart the simulation with the very first arrival
-    Event firstArrival;
-    firstArrival.time = GetNextRandomInterval(lambda);
-    firstArrival.type = 0; // 0 = Arrival
-    pq.insert(firstArrival);
+    // 1. Starts the simulation with the first batch of arrivals
+    while (pq.size() < 200 && arrivalsGenerated < maxArrivals) {
+        lastArrivalTime += GetNextRandomInterval(lambda);
+        Event newArrival;
+        newArrival.time = lastArrivalTime;
+        newArrival.type = 0; 
+        pq.insert(newArrival);
+        arrivalsGenerated++;
+    }
 
     cout << "Starting simulation..." << endl;
 
@@ -77,15 +83,6 @@ int main() {
         
         if (currentEvent.type == 0) {
             // Arrival Logic
-            
-            // 1. Schedules the next person to arrive (if we haven't hit the limit)
-            if (eventsProcessed < totalEvents) {
-                Event nextArrival;
-                nextArrival.time = currentTime + GetNextRandomInterval(lambda);
-                nextArrival.type = 0;
-                pq.insert(nextArrival);
-            }
-
             // 2. Processes the person
             if (availableServers > 0) {
                 // If server is free, take them immediately.
@@ -123,11 +120,33 @@ int main() {
         }
         
         eventsProcessed++;
+        
+        // Priority Queue Refill Logic
+        // Keeps the priority queue small. Refills when it drops to M+1
+        if (pq.size() == M + 1 && arrivalsGenerated < maxArrivals) {
+            while (pq.size() < 200 && arrivalsGenerated < maxArrivals) {
+                lastArrivalTime += GetNextRandomInterval(lambda);
+                Event newArrival;
+                newArrival.time = lastArrivalTime;
+                newArrival.type = 0;
+                pq.insert(newArrival);
+                arrivalsGenerated++;
+            }
+        }
     }
 
     cout << "Simulation complete!" << endl;
     cout << "Total Events Processed: " << eventsProcessed << endl;
     cout << "Final Simulation Time : " << currentTime << endl;
+}
+
+int main() {
+    // Seeds the random number generator 
+    srand(time(0));
+
+    // Automates running both simulation files
+    runSimulation("test1.txt");
+    runSimulation("test2.txt");
 
     return 0;
 }

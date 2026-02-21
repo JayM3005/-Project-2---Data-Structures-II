@@ -51,3 +51,11 @@ double FIFOQueue::dequeue() {
 bool FIFOQueue::isEmpty() {
     return head == nullptr;
 }
+
+// Destructor to prevent memory leaks
+FIFOQueue::~FIFOQueue() {
+    // Keeps removing customers until the line is completely empty
+    while (!isEmpty()) {
+        dequeue(); 
+    }
+}

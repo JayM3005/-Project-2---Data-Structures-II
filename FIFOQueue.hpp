@@ -19,6 +19,8 @@ private:
 
 public:
     FIFOQueue();
+    // Destructor
+    ~FIFOQueue(); 
     
     // Adds a customer to the back
     void enqueue(double arrivalTime);
