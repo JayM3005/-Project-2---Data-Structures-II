@@ -15,7 +15,7 @@ int PriorityQueue::size() {
     return heap.size() - 1;
 }
 
-void PriorityQueue::insert(const Event e) {
+void PriorityQueue::insert(const Event& e) {
     // 1 - Adds to the very end
     heap.push_back(e);
     

@@ -31,7 +31,7 @@ public:
     PriorityQueue();
 
     // Adds a new event to the pile
-    void insert(const Event e);
+    void insert(const Event& e);
 
     // Removes and returns the earliest event, the root
     Event deleteMin();

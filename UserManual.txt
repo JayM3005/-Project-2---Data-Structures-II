@@ -1,0 +1,62 @@
+Jay McIntosh
+Data Structures & Algorithms II
+Project #2
+User's Manual
+
+Setup:
+    1. Download and unzip file from submission.
+    2. Zip should contain these project files:
+        - main.cpp - Code containing the Simulation Event Loop, random time generation, and statistics tracking.
+        - PriorityQueue.cpp - Implements the Priority Queue for the event calendar.
+        - PriorityQueue.hpp - Defines the Class and Event structure for the Priority Queue.
+        - FIFOQueue.cpp - Implements the FIFO Queue for the waiting line.
+        - FIFOQueue.hpp - Defines the Class and Customer structure for the FIFO Queue.
+        - Makefile - Script for compiling and cleaning the project.
+        - test1.txt - Input file containing the first set of simulation parameters.
+        - test2.txt - Input file containing the second set of simulation parameters.
+        - UML Diagram.png - System and structure diagram.
+        - UserManual.txt - This file.
+
+Compiling:
+    3. The project includes a Makefile for easy compilation. Open a terminal in the project directory and run:
+         make
+
+This should create an executable file named 'sim'.
+
+Running the program:
+    4. After compiling, the program can be ran by executing the command:
+         ./sim
+
+Output:
+    5. After running the command, ./sim, it will automatically process test1.txt and test2.txt. It should output something similar to the example provided below:
+
+        ==================================================
+        Running Simulation for: test1.txt
+        Lambda: 2 | Mu: 3 | Servers: 2 | Events: 5000
+        ==================================================
+        Measure                       Analytical          Simulation          
+        -----------------------------------------------------------------
+        Po (Percent Idle Time)        0.5000              0.5073              
+        W  (Time in System)           0.3750              0.3770              
+        Wq (Wait Time)                0.0417              0.0435              
+        Rho(Utilization Factor)       0.3333              0.3261              
+        -----------------------------------------------------------------
+        Probability of Waiting: 0.1568
+
+
+        ==================================================
+        Running Simulation for: test2.txt
+        Lambda: 5 | Mu: 6 | Servers: 4 | Events: 5000
+        ==================================================
+        Measure                       Analytical          Simulation          
+        -----------------------------------------------------------------
+        Po (Percent Idle Time)        0.4343              0.4354              
+        W  (Time in System)           0.1672              0.1676              
+        Wq (Wait Time)                0.0006              0.0003              
+        Rho(Utilization Factor)       0.2083              0.2057              
+        -----------------------------------------------------------------
+        Probability of Waiting: 0.0100
+
+***Notes:
+    - User Input: No user input needed for this project. The program automatically reads test1.txt and test2.txt.
+    - Environment: Tested in multi-platform lab and will run there.
