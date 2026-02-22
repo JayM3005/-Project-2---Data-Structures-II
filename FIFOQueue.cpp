@@ -41,7 +41,7 @@ double FIFOQueue::dequeue() {
         tail = nullptr;
     }
 
-    // Clean up memory
+    // Cleans up memory
     delete temp; 
     count--;
 
